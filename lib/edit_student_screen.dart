@@ -28,7 +28,7 @@ class _EditStudentPageState extends State<EditStudentPage> {
     colCont.text = widget.student['collage'].toString();
     depCont.text = widget.student['department'].toString();
     levCont.text = widget.student['level'].toString();
-    String gender = widget.student['gender'].toString();
+    gender = widget.student['gender'].toString();
   }
 
   @override
@@ -44,12 +44,7 @@ class _EditStudentPageState extends State<EditStudentPage> {
               const SizedBox(
                 height: 20,
               ),
-              CircleAvatar(
-                radius: 60,
-                backgroundColor: widget.student['gender'] == 'Male'
-                    ? const Color.fromARGB(255, 3, 161, 252)
-                    : const Color.fromARGB(255, 252, 3, 148),
-              ),
+
               TextFormField(
                 validator: (value) {
                   if (value!.isEmpty) {
