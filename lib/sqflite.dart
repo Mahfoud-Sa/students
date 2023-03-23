@@ -1,6 +1,8 @@
+import 'package:flutter/widgets.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:path/path.dart';
+import 'package:flutter/material.dart';
 
 class SqlDb {
   static Database? _db;
@@ -63,5 +65,13 @@ class SqlDb {
     int response = await mydb!.rawDelete("delete from students where id=$id");
     print(response);
     return response;
+  }
+}
+
+class AppProbider with ChangeNotifier {
+  var themeMode = ThemeMode.dark;
+  changeMode() {
+    themeMode = themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+    notifyListeners();
   }
 }
