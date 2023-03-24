@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:students/sqflite.dart';
 import 'package:students/add_student_screen.dart';
 import 'package:students/student_detailes.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
-import 'package:students/sqflite.dart';
 
 void main() {
-  runApp(Students());
+  runApp(const Students());
 }
 
 class Students extends StatefulWidget {
-  Students({super.key});
+  const Students({super.key});
 
   @override
   State<Students> createState() => _StudentsState();
@@ -19,15 +17,6 @@ class Students extends StatefulWidget {
 
 class _StudentsState extends State<Students> {
   //final SharedPreferences setting = await SharedPreferences().getInstance();
-  getSetting() async {
-    SharedPreferences setting = await SharedPreferences.getInstance();
-    return setting.getBool('darkMode');
-  }
-
-  saveSetting() async {
-    SharedPreferences setting = await SharedPreferences.getInstance();
-    return setting.setBool('darkMode', false);
-  }
 
   @override
   void initState() {
@@ -44,7 +33,7 @@ class _StudentsState extends State<Students> {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Students List',
-          themeMode: provider.themeMode,
+          themeMode: provider.darkTheme ? ThemeMode.dark : ThemeMode.light,
           darkTheme: ThemeData.dark(),
           theme: ThemeData(
             primarySwatch: Colors.blue,
@@ -65,6 +54,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   SqlDb sql = SqlDb();
+  AppProbider theme = AppProbider();
+  getTheme() async {
+    theme.darkTheme = await theme.darkThemePreference.getThene();
+  }
 
   late List students = [];
 
@@ -80,6 +73,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     getStudents();
+    getTheme();
   }
 
   @override
@@ -91,11 +85,11 @@ class _HomePageState extends State<HomePage> {
           actions: [
             IconButton(
                 onPressed: () {
-                  value.changeMode();
+                  value.darkTheme = !value.darkTheme;
                 },
-                icon: value.themeMode == ThemeMode.light
-                    ? Icon(Icons.light_mode)
-                    : Icon(Icons.dark_mode))
+                icon: value.darkTheme
+                    ? const Icon(Icons.light_mode)
+                    : const Icon(Icons.dark_mode))
           ],
         ),
         body: ListView.builder(
