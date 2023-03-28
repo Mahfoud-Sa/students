@@ -1,6 +1,9 @@
+import 'package:flutter/widgets.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:path/path.dart';
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SqlDb {
   static Database? _db;
@@ -63,5 +66,30 @@ class SqlDb {
     int response = await mydb!.rawDelete("delete from students where id=$id");
     print(response);
     return response;
+  }
+}
+
+class AppProbider with ChangeNotifier {
+  DarkThemePreference darkThemePreference = DarkThemePreference();
+  bool _darkTheme = false;
+  bool get darkTheme => _darkTheme;
+
+  set darkTheme(bool value) {
+    _darkTheme = value;
+    darkThemePreference.setDarkTheme(value);
+    notifyListeners();
+  }
+}
+
+class DarkThemePreference {
+  static const THEME_STATE = "THEMESTATE";
+  setDarkTheme(bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool(THEME_STATE, value);
+  }
+
+  Future<bool> getThene() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(THEME_STATE) ?? false;
   }
 }

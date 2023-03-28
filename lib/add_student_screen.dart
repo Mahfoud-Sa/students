@@ -60,7 +60,8 @@ class _AddStudentPageState extends State<AddStudentPage> {
                   return null;
                 },
                 controller: depCont,
-                decoration: const InputDecoration(hintText: 'Department'),
+                decoration:
+                    const InputDecoration(hintText: 'Student Department'),
               ),
               //Level
               TextFormField(
