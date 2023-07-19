@@ -3,6 +3,8 @@ import 'package:flutter/rendering.dart';
 import 'package:students/main.dart';
 import 'package:students/sqflite.dart';
 
+import 'Views/login_page.dart';
+
 class EditStudentPage extends StatefulWidget {
   final student;
   EditStudentPage({required this.student, super.key});
@@ -144,7 +146,8 @@ class _EditStudentPageState extends State<EditStudentPage> {
                             ''');
 
                         Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(builder: (context) => HomePage()),
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()),
                             (route) => false);
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(

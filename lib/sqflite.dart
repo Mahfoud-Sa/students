@@ -29,23 +29,18 @@ class SqlDb {
 
   _onCreate(Database db, int version) async {
     await db.execute('''
-  CREATE TABLE "students" ( 
+  
+  CREATE TABLE "users" ( 
     "id" INTEGER  NOT NULL PRIMARY KEY  AUTOINCREMENT, 
-    "name" TEXT NOT NULL,
-    "collage" TEXT NOT NULL,
-    "department" TEXT NOT NULL,
-    "level" INTEGER Not Null,
-    "gender" TEXT NOT NULL
-    
-
-    
-  )
+    "name" TEXT NOT NULL unique,
+    "password" TEXT NOT NULL
+    )
  ''');
   }
 
-  readData() async {
+  readData(String query) async {
     Database? mydb = await db;
-    List<Map> response = await mydb!.rawQuery("SELECT * FROM students");
+    List<Map> response = await mydb!.rawQuery(query);
     return response;
   }
 

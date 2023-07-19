@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:students/Views/login_page.dart';
 import 'package:students/main.dart';
 import 'package:students/sqflite.dart';
-//void main() => runApp(const MyApp());
 
 class AddStudentPage extends StatefulWidget {
   AddStudentPage({super.key});
@@ -125,7 +125,8 @@ class _AddStudentPageState extends State<AddStudentPage> {
                           ''');
 
                         Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(builder: (context) => HomePage()),
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()),
                             (route) => false);
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
