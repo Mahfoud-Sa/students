@@ -15,8 +15,14 @@ class UsersAPI extends UserRepository {
   }
 
   @override
-  Future<UserModel> put(UserModel user) {
+  Future<UserModel> put(int id, UserModel user) {
     // TODO: implement put
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> delete(int id) {
+    // TODO: implement delete
     throw UnimplementedError();
   }
 }

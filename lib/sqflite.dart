@@ -56,10 +56,10 @@ class SqlDb {
     return response;
   }
 
-  deleteData(int id) async {
+  deleteData(String query) async {
     Database? mydb = await db;
-    int response = await mydb!.rawDelete("delete from students where id=$id");
-    print(response);
+    int response = await mydb!.rawDelete(query);
+    //print(response);
     return response;
   }
 }
