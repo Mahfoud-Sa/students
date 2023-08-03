@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:students/Repository/UsersRepository/users_local.dart';
 import 'package:students/ViewModels/personal_detailesVM.dart';
 import 'package:students/Views/login_page.dart';
 import 'package:students/Views/personal_detailes_edit_page.dart';
+import 'package:students/providers/current_user_provider.dart';
 
 import 'home_page.dart';
 
@@ -30,16 +32,14 @@ class PersonalDetailes extends StatelessWidget {
       ),
       body: Column(
         children: [
-          FutureBuilder(
-            future: data.getUserName(),
-            builder: (context, snapshot) {
-              return Text(snapshot.data.toString());
+          Consumer<CurrentUserProvider>(
+            builder: (context, value, child) {
+              return Text(value.CurrentUser.userName!);
             },
           ),
-          FutureBuilder(
-            future: data.getPasswordName(),
-            builder: (context, snapshot) {
-              return Text(snapshot.data.toString());
+          Consumer<CurrentUserProvider>(
+            builder: (context, value, child) {
+              return Text(value.CurrentUser.password!);
             },
           ),
           TextButton(
@@ -66,6 +66,10 @@ class PersonalDetailes extends StatelessWidget {
                                   MaterialPageRoute(
                                       builder: (context) => LoginScreen()),
                                   (route) => false);
+                              var provider = Provider.of<CurrentUserProvider>(
+                                  context,
+                                  listen: false);
+                              provider.logOut();
                             } else {
                               Navigator.of(context).pop();
                             }

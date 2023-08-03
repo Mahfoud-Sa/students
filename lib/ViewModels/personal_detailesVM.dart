@@ -22,6 +22,7 @@ class PersonalDetailesVM {
     if (sherPre.getString('password') == oldPassword) {
       int id = sherPre.getInt('id')!;
       await UsersLocal().delete(id);
+
       return "Done";
     } else {
       return "Your password incorrect";

@@ -4,6 +4,7 @@ import 'package:sqflite/sqflite.dart' as sql;
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:students/Models/user_model.dart';
 
 class SqlDb {
   static Database? _db;
@@ -65,6 +66,8 @@ class SqlDb {
 }
 
 class AppProbider with ChangeNotifier {
+  //UserModel CurrentUser = UserModel();
+
   DarkThemePreference darkThemePreference = DarkThemePreference();
   bool _darkTheme = false;
   bool get darkTheme => _darkTheme;

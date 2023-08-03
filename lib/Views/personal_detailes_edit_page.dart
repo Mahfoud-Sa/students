@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:students/Models/user_model.dart';
 import 'package:students/ViewModels/personal_detailesVM.dart';
+import 'package:students/providers/current_user_provider.dart';
 
 import '../ViewModels/personal_detailes_editVM.dart';
 
@@ -93,6 +95,10 @@ class PersonalDetailesEdit extends StatelessWidget {
                                 await data.edit(usr);
                             if (editePersonalDetailesState ==
                                 'Updated Susseccfly') {
+                              var provider = Provider.of<CurrentUserProvider>(
+                                  context,
+                                  listen: false);
+                              provider.SetCurrentUser();
                               Navigator.pop(context);
                             }
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
