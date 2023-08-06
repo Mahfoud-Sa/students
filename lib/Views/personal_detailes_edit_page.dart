@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:students/Models/user_model.dart';
-import 'package:students/ViewModels/personal_detailesVM.dart';
-import 'package:students/providers/current_user_provider.dart';
-
-import '../ViewModels/personal_detailes_editVM.dart';
+import 'package:students/Models/user.dart';
+import 'package:students/ViewModels/users_view_model.dart';
 
 class PersonalDetailesEdit extends StatelessWidget {
-  PersonalDetailesEditVM data = PersonalDetailesEditVM();
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _repeatPasswordController = TextEditingController();
-
+  User user;
   @override
   void dispose() {
     _usernameController.dispose();
@@ -20,10 +16,11 @@ class PersonalDetailesEdit extends StatelessWidget {
     // super.dispose();
   }
 
-  PersonalDetailesEdit({super.key});
+  PersonalDetailesEdit({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
+    var userViewModel = Provider.of<UsersViewModel>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -88,25 +85,22 @@ class PersonalDetailesEdit extends StatelessWidget {
                         child: Text('save'),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            UserModel usr = UserModel(
+                            User usr = User(
                                 userName: _usernameController.text,
                                 password: _passwordController.text);
+
                             String editePersonalDetailesState =
-                                await data.edit(usr);
-                            if (editePersonalDetailesState ==
-                                'Updated Susseccfly') {
-                              var provider = Provider.of<CurrentUserProvider>(
-                                  context,
-                                  listen: false);
-                              provider.SetCurrentUser();
+                                await userViewModel.updateUser(user.id!, usr);
+
+                            if (editePersonalDetailesState == 'Done') {
                               Navigator.pop(context);
                             }
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 showCloseIcon: true,
-                                backgroundColor: editePersonalDetailesState !=
-                                        'Updated Susseccfly'
-                                    ? Colors.red
-                                    : Colors.green,
+                                backgroundColor:
+                                    editePersonalDetailesState != 'Done'
+                                        ? Colors.red
+                                        : Colors.green,
                                 content: Text('$editePersonalDetailesState')));
 
                             // Add your login logic using the entered username and password

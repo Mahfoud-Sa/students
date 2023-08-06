@@ -1,8 +1,10 @@
-import 'package:students/Models/user_model.dart';
+import 'package:students/Models/user.dart';
 
 abstract class UserRepository {
-  Future<UserModel> put(int id, UserModel user);
-  Future<bool> create(UserModel user);
-  Future<UserModel> get(String name, String password);
+  Future<List<User>> getAll();
+  Future<User> put(int id, User user);
+  Future<bool> create(User user);
+  Future<User> logIn(String name, String password);
   Future<bool> delete(int id);
+  Future<User> get(int id);
 }

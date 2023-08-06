@@ -1,5 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:students/Models/user_model.dart';
+import 'package:students/Models/user.dart';
 import 'package:students/Repository/UsersRepository/users_local.dart';
 
 class PersonalDetailesVM {

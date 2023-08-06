@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:students/Models/user_model.dart';
+import 'package:students/Models/user.dart';
 import 'package:students/Repository/UsersRepository/users_local.dart';
 import 'package:students/ViewModels/singinVM.dart';
 

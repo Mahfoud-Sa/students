@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:students/Views/home_page.dart';
 import 'package:students/Views/login_page.dart';
 import 'package:students/Views/singin_page.dart';
-import 'package:students/providers/current_user_provider.dart';
+import 'package:students/ViewModels/users_view_model.dart';
 import 'package:students/sqflite.dart';
 import 'package:students/add_student_screen.dart';
 import 'package:students/student_detailes.dart';
@@ -36,7 +36,7 @@ class _StudentsState extends State<Students> {
           return AppProbider();
         }),
         ChangeNotifierProvider(create: (context) {
-          return CurrentUserProvider();
+          return UsersViewModel();
         }),
       ],
       child: Consumer<AppProbider>(
@@ -63,7 +63,7 @@ class Splash extends StatelessWidget {
   Splash({super.key});
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<CurrentUserProvider>(context);
+    var provider = Provider.of<UsersViewModel>(context);
 
     return FutureBuilder(
       future: provider.IsLoging(),

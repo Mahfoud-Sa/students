@@ -1,14 +1,14 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:students/Models/user_model.dart';
+import 'package:students/Models/user.dart';
 import 'package:students/Repository/UsersRepository/users_repository.dart';
 import 'package:students/sqflite.dart';
 
 class UsersLocal extends UserRepository {
   SqlDb db = SqlDb();
   @override
-  Future<bool> create(UserModel user) async {
+  Future<bool> create(User user) async {
     int response = await db.insertData('''
                           INSERT INTO "users" ('name', 'password')
                           VALUES ("${user.userName}","${user.password}")
@@ -21,7 +21,7 @@ class UsersLocal extends UserRepository {
   }
 
   @override
-  Future<UserModel> get(String name, String password) async {
+  Future<User> logIn(String name, String password) async {
     var response = await db.readData(
         "SELECT * FROM users where name='$name' and password='$password'");
     if (!response.isEmpty) {
@@ -29,7 +29,7 @@ class UsersLocal extends UserRepository {
       //print(data['name']);
       //print(data.first.runtimeType);
 
-      return UserModel(
+      return User(
           id: data['id'], userName: data['name'], password: data['password']);
     } else {
       throw 'Error in username or password';
@@ -37,7 +37,7 @@ class UsersLocal extends UserRepository {
   }
 
   @override
-  Future<UserModel> put(int id, UserModel user) async {
+  Future<User> put(int id, User user) async {
     var response = await db.updateData(
         "update users set name='${user.userName}',password='${user.password}' where id=$id");
     if (response == 1) {
@@ -55,5 +55,27 @@ class UsersLocal extends UserRepository {
     //print(data.first.runtimeType);
 
     return true;
+  }
+
+  @override
+  getAll() async {
+    List<Map<String, Object?>> response = await db.query("users");
+    List<User> users = response.map((json) => User.fromJson(json)).toList();
+    return users;
+  }
+
+  @override
+  Future<User> get(int id) async {
+    var response = await db.readData("SELECT * FROM users where id='$id'");
+    if (!response.isEmpty) {
+      var data = response.first;
+      //print(data['name']);
+      //print(data.first.runtimeType);
+
+      return User(
+          id: data['id'], userName: data['name'], password: data['password']);
+    } else {
+      throw 'error while loading';
+    }
   }
 }

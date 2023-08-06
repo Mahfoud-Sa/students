@@ -5,7 +5,7 @@ import 'package:students/ViewModels/loginVM.dart';
 import 'package:students/Views/home_page.dart';
 import 'package:students/Views/singin_page.dart';
 import 'package:students/main.dart';
-import 'package:students/providers/current_user_provider.dart';
+import 'package:students/ViewModels/users_view_model.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -79,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 _usernameController.text,
                                 _passwordController.text);
                             if (logInMessage == 'Welcome') {
-                              var provider = Provider.of<CurrentUserProvider>(
+                              var provider = Provider.of<UsersViewModel>(
                                   context,
                                   listen: false);
 

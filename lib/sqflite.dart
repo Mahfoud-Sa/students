@@ -4,7 +4,7 @@ import 'package:sqflite/sqflite.dart' as sql;
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:students/Models/user_model.dart';
+import 'package:students/Models/user.dart';
 
 class SqlDb {
   static Database? _db;
@@ -42,6 +42,12 @@ class SqlDb {
   readData(String query) async {
     Database? mydb = await db;
     List<Map> response = await mydb!.rawQuery(query);
+    return response;
+  }
+
+  query(String query) async {
+    Database? mydb = await db;
+    List<Map> response = await mydb!.query(query);
     return response;
   }
 
