@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:students/ViewModels/login_view_model.dart';
 import 'package:students/Views/home_page.dart';
 import 'package:students/Views/login_page.dart';
 import 'package:students/Views/singin_page.dart';
@@ -37,6 +38,9 @@ class _StudentsState extends State<Students> {
         }),
         ChangeNotifierProvider(create: (context) {
           return UsersViewModel();
+        }),
+        ChangeNotifierProvider(create: (context) {
+          return LoginViewModel();
         }),
       ],
       child: Consumer<AppProbider>(

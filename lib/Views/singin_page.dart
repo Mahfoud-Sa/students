@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:students/Models/user.dart';
-import 'package:students/Repository/UsersRepository/users_local.dart';
-import 'package:students/ViewModels/singinVM.dart';
+import 'package:provider/provider.dart';
+import 'package:students/ViewModels/login_view_model.dart';
 
 class SinginScreen extends StatefulWidget {
   @override
@@ -9,7 +8,7 @@ class SinginScreen extends StatefulWidget {
 }
 
 class _SinginScreenState extends State<SinginScreen> {
-  SinginVM data = SinginVM();
+  //SinginVM data = SinginVM();
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -24,6 +23,8 @@ class _SinginScreenState extends State<SinginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var loginVewModel = Provider.of<LoginViewModel>(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -87,15 +88,18 @@ class _SinginScreenState extends State<SinginScreen> {
                         child: Text('sing in'),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            String loginState = await data.Singin(
+                            String loginState = await loginVewModel.Singin(
                                 _usernameController.text,
                                 _passwordController.text);
-                            if (loginState == "singInSuccefully") {
+                            if (loginState == "Singin Successfully") {
                               Navigator.of(context).pop();
                             }
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 showCloseIcon: true,
-                                backgroundColor: Colors.green,
+                                backgroundColor:
+                                    loginState == "Singin Successfully"
+                                        ? Colors.green
+                                        : Colors.red,
                                 content: Text('$loginState')));
                           }
                         }),

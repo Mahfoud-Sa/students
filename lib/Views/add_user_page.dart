@@ -1,31 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:students/Models/user.dart';
+import 'package:students/Repository/UsersRepository/users_local.dart';
 import 'package:students/ViewModels/users_view_model.dart';
 
-class PersonalDetailesEdit extends StatelessWidget {
+class AddUserPage extends StatefulWidget {
+  @override
+  _AddUserPageState createState() => _AddUserPageState();
+}
+
+class _AddUserPageState extends State<AddUserPage> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _repeatPasswordController = TextEditingController();
-  User user;
+  final _rePasswordController = TextEditingController();
+
   @override
   void dispose() {
     _usernameController.dispose();
     _passwordController.dispose();
-    // super.dispose();
+    super.dispose();
   }
-
-  PersonalDetailesEdit({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
     var userViewModel = Provider.of<UsersViewModel>(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        centerTitle: true,
-        title: Text('Edit Personal Detailes'),
+        title: Text('Add User'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -63,9 +67,8 @@ class PersonalDetailesEdit extends StatelessWidget {
                         return null;
                       },
                     ),
-                    SizedBox(height: 24.0),
                     TextFormField(
-                      controller: _repeatPasswordController,
+                      controller: _rePasswordController,
                       decoration: InputDecoration(
                         labelText: 'Repeat Password',
                       ),
@@ -82,29 +85,19 @@ class PersonalDetailesEdit extends StatelessWidget {
                     ),
                     SizedBox(height: 24.0),
                     TextButton(
-                        child: Text('save'),
+                        child: Text('Add'),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            User usr = User(
-                                userName: _usernameController.text,
-                                password: _passwordController.text);
-
-                            String editePersonalDetailesState =
-                                await userViewModel.updateUser(user.id!, usr);
-
-                            if (editePersonalDetailesState == 'Done') {
-                              Navigator.pop(context);
-                              Navigator.pop(context);
+                            String loginState = await userViewModel.addUser(
+                                _usernameController.text,
+                                _passwordController.text);
+                            if (loginState == "Done") {
+                              Navigator.of(context).pop();
                             }
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 showCloseIcon: true,
-                                backgroundColor:
-                                    editePersonalDetailesState != 'Done'
-                                        ? Colors.red
-                                        : Colors.green,
-                                content: Text('$editePersonalDetailesState')));
-
-                            // Add your login logic using the entered username and password
+                                backgroundColor: Colors.green,
+                                content: Text('$loginState')));
                           }
                         }),
                   ],

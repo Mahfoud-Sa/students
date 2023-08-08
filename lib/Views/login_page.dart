@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:students/Repository/UsersRepository/users_local.dart';
-import 'package:students/ViewModels/loginVM.dart';
+import 'package:students/ViewModels/login_view_model.dart';
 import 'package:students/Views/home_page.dart';
 import 'package:students/Views/singin_page.dart';
 import 'package:students/main.dart';
 import 'package:students/ViewModels/users_view_model.dart';
+import 'package:students/utiles/navigations_utiles.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -13,7 +14,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  LoginVM data = LoginVM();
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -27,6 +27,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var loginViewModel = Provider.of<LoginViewModel>(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -75,25 +77,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Text('Login'),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            String logInMessage = await data.logIn(
+                            String logInMessage = await loginViewModel.logIn(
                                 _usernameController.text,
                                 _passwordController.text);
                             if (logInMessage == 'Welcome') {
-                              var provider = Provider.of<UsersViewModel>(
-                                  context,
-                                  listen: false);
-
-                              //print(provider.CurrentUser.userName);
-                              provider.SetCurrentUser().then(
-                                (value) {
-                                  if (value) {
-                                    Navigator.of(context).pushAndRemoveUntil(
-                                        MaterialPageRoute(
-                                            builder: (context) => HomePage()),
-                                        (route) => false);
-                                  }
-                                },
-                              );
+                              pushNavigateTo(context, HomePage());
                             }
 
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -107,10 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextButton(
                         onPressed: () {
                           {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) => SinginScreen()),
-                            );
+                            pushNavigateTo(context, SinginScreen());
                           }
                         },
                         child: Text('do not have an account? sing in '))

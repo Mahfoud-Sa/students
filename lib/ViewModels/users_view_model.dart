@@ -11,14 +11,15 @@ class UsersViewModel with ChangeNotifier {
   List<User> users = [];
   User CurrentUser = User();
   Future<List<User>> getusers() async {
-    var users = await UsersLocal().getAll();
-    //notifyListeners();
+    var _users = await UsersLocal().getAll();
+    users = _users;
+    notifyListeners();
     return users;
   }
 
   late bool _isLoging = false; //'//CurrentUser.userName.isEmpty ? false : true;
 
-  login() {}
+  //login() {}
 
   logOut() async {
     SharedPreferences sherPre = await SharedPreferences.getInstance();
@@ -36,7 +37,6 @@ class UsersViewModel with ChangeNotifier {
     return _isLoging;
   }
 
-  //CurrentUser=getCurrentUser();
   Future<User> getCurrentUser() async {
     //return CurrentUser;
     //UserModel CurrentUser = UserModel();
@@ -51,7 +51,7 @@ class UsersViewModel with ChangeNotifier {
     CurrentUser.id = id;
     CurrentUser.userName = userName;
     CurrentUser.password = userPassword;
-
+    //User _user = User();
     return CurrentUser;
   }
 
@@ -78,6 +78,18 @@ class UsersViewModel with ChangeNotifier {
                     user: user,
                   )),
         ));
+  }
+
+  Future<String> addUser(String name, String password) async {
+    User use = User(userName: name, password: password);
+    try {
+      await UsersLocal().create(use);
+      users.add(use);
+      notifyListeners();
+      return "Done";
+    } catch (e) {
+      return e.toString();
+    }
   }
 
   Future<String> updateUser(int id, User user) async {

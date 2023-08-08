@@ -4,13 +4,31 @@ import 'package:provider/provider.dart';
 import 'package:students/Models/user.dart';
 import 'package:students/Repository/UsersRepository/users_local.dart';
 import 'package:students/ViewModels/users_view_model.dart';
+import 'package:students/Views/add_user_page.dart';
 import 'package:students/Views/personal_detailes_edit_page.dart';
 import 'package:students/Views/personal_detailes_page.dart';
 import 'package:students/Views/singin_page.dart';
 import 'package:students/utiles/navigations_utiles.dart';
 
-class UsersPage extends StatelessWidget {
+class UsersPage extends StatefulWidget {
   UsersPage({super.key});
+
+  @override
+  State<UsersPage> createState() => _UsersPageState();
+}
+
+class _UsersPageState extends State<UsersPage> {
+  late Future<List<User>> users;
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    users = getUsers();
+  }
+
+  Future<List<User>> getUsers() async {
+    var user = await UsersViewModel().getusers();
+    return user;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +40,7 @@ class UsersPage extends StatelessWidget {
         centerTitle: true,
       ),
       body: FutureBuilder(
-        future: userViewModel.getusers(),
+        future: users,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasData) {
@@ -55,7 +73,7 @@ class UsersPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: () {
-            pushNavigateTo(context, SinginScreen());
+            pushNavigateTo(context, AddUserPage());
           }),
     );
   }

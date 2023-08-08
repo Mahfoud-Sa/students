@@ -1,13 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:students/Views/login_page.dart';
+import 'package:students/Models/user.dart';
 import 'package:students/Views/personal_detailes_page.dart';
 import 'package:students/ViewModels/users_view_model.dart';
 import 'package:students/Views/users_page.dart';
 import 'package:students/utiles/navigations_utiles.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late Future<User> user;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    user = getCurrentUser();
+  }
+
+  Future<User> getCurrentUser() async {
+    var user = await UsersViewModel().getCurrentUser();
+    return user;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,28 +35,18 @@ class HomePage extends StatelessWidget {
       drawer: Drawer(
         child: Column(
           children: [
-            UserAccountsDrawerHeader(
-              accountEmail: FutureBuilder(
-                future: userViewModel.getCurrentUser(),
+            FutureBuilder(
+                future: user,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
-                    return Text(snapshot.data!.userName!);
-                  } else {
-                    return CircularProgressIndicator();
+                    if (snapshot.hasData) {
+                      return UserAccountsDrawerHeader(
+                          accountName: Text(snapshot.data!.userName!),
+                          accountEmail: Text(snapshot.data!.password!));
+                    }
                   }
-                },
-              ),
-              accountName: FutureBuilder(
-                future: userViewModel.getCurrentUser(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    return Text(snapshot.data!.password!);
-                  } else {
-                    return CircularProgressIndicator();
-                  }
-                },
-              ),
-            ),
+                  return CircularProgressIndicator();
+                }),
             ListTile(
               leading: Icon(Icons.person),
               title: Text('Personal Detailes'),
@@ -62,9 +70,7 @@ class HomePage extends StatelessWidget {
                 IconButton(
                   icon: Icon(Icons.logout),
                   onPressed: () {
-                    var provider =
-                        Provider.of<UsersViewModel>(context, listen: false);
-                    provider.logOut();
+                    userViewModel.logOut();
                     removeNavigatTo(context, HomePage());
                   },
                 ),

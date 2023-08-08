@@ -1,13 +1,14 @@
-import 'dart:convert';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:students/Models/user.dart';
 import 'package:students/Repository/UsersRepository/users_local.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:students/ViewModels/users_view_model.dart';
+import 'package:students/utiles/navigations_utiles.dart';
 
-class LoginVM {
+import '../Views/personal_detailes_edit_page.dart';
+import '../Views/personal_detailes_page.dart';
+
+class LoginViewModel with ChangeNotifier {
   Future<String> logIn(String name, String password) async {
     try {
       User currentUser = await UsersLocal().logIn(name, password);
@@ -18,7 +19,18 @@ class LoginVM {
       sherPre.setString('userName', currentUser.userName!);
 
       sherPre.setString('password', currentUser.password!);
+
       return "Welcome";
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future<String> Singin(String name, String password) async {
+    User use = User(userName: name, password: password);
+    try {
+      await UsersLocal().create(use);
+      return "Singin Successfully";
     } catch (e) {
       return e.toString();
     }

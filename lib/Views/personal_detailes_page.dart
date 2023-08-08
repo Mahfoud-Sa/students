@@ -1,16 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:students/Models/user.dart';
 import 'package:students/Repository/UsersRepository/users_local.dart';
 import 'package:students/Views/login_page.dart';
 import 'package:students/Views/personal_detailes_edit_page.dart';
 import 'package:students/ViewModels/users_view_model.dart';
+import 'package:students/utiles/navigations_utiles.dart';
 
 import 'home_page.dart';
 
-class PersonalDetailes extends StatelessWidget {
+class PersonalDetailes extends StatefulWidget {
   final index;
-  TextEditingController passCont = new TextEditingController();
+
   PersonalDetailes({super.key, this.index});
+
+  @override
+  State<PersonalDetailes> createState() => _PersonalDetailesState();
+}
+
+class _PersonalDetailesState extends State<PersonalDetailes> {
+  late Future<User> _user;
+
+  TextEditingController passCont = new TextEditingController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _user = getUser();
+  }
+
+  Future<User> getUser() async {
+    var user = await UsersViewModel().getUser(widget.index);
+    return user;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,22 +44,23 @@ class PersonalDetailes extends StatelessWidget {
           actions: [
             IconButton(
                 onPressed: () {
-                  userViewModel.navigateToUserDetailesEdit(context, index);
+                  userViewModel.navigateToUserDetailesEdit(
+                      context, widget.index);
                 },
                 icon: Icon(Icons.edit))
           ],
         ),
-        body: FutureBuilder(
-          future: userViewModel.getUser(index),
+        body: Center(
+            child: FutureBuilder(
+          future: _user,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.hasData) {
-                //var userName;
                 return Column(
                   children: [
                     Text(snapshot.data!.id.toString()),
-                    Text(snapshot.data!.userName.toString()),
-                    Text(snapshot.data!.password.toString()),
+                    Text(snapshot.data!.userName!),
+                    Text(snapshot.data!.password!),
                     TextButton(
                         onPressed: () {
                           showDialog(
@@ -57,20 +80,14 @@ class PersonalDetailes extends StatelessWidget {
                                 TextButton(
                                     child: Text('Continue'),
                                     onPressed: () async {
-                                      var deleteState = await userViewModel
-                                          .deletetUser(index, passCont.text);
+                                      var deleteState =
+                                          await userViewModel.deletetUser(
+                                              widget.index, passCont.text);
 
                                       if (deleteState == "Done") {
-                                        Navigator.of(context)
-                                            .pushAndRemoveUntil(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        LoginScreen()),
-                                                (route) => false);
-                                        var provider =
-                                            Provider.of<UsersViewModel>(context,
-                                                listen: false);
-                                        provider.logOut();
+                                        removeNavigatTo(context, LoginScreen());
+
+                                        userViewModel.logOut();
                                       } else {
                                         Navigator.of(context).pop();
                                       }
@@ -99,6 +116,6 @@ class PersonalDetailes extends StatelessWidget {
             }
             return CircularProgressIndicator();
           },
-        ));
+        )));
   }
 }
