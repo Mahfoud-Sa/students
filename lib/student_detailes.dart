@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:students/edit_student_screen.dart';
 import 'package:students/main.dart';
-import 'package:students/sqflite.dart';
+import 'package:students/data/database_init.dart';
 
 class StudentDetailes extends StatelessWidget {
   var student;

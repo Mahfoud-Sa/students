@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:students/Models/user.dart';
+import 'package:students/Views/login_page.dart';
 import 'package:students/Views/personal_detailes_page.dart';
 import 'package:students/ViewModels/users_view_model.dart';
 import 'package:students/Views/users_page.dart';
@@ -14,39 +14,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late Future<User> user;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    user = getCurrentUser();
-  }
-
-  Future<User> getCurrentUser() async {
-    var user = await UsersViewModel().getCurrentUser();
-    return user;
-  }
-
   @override
   Widget build(BuildContext context) {
     var userViewModel = Provider.of<UsersViewModel>(context);
-
     return Scaffold(
       drawer: Drawer(
         child: Column(
           children: [
-            FutureBuilder(
-                future: user,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    if (snapshot.hasData) {
-                      return UserAccountsDrawerHeader(
-                          accountName: Text(snapshot.data!.userName!),
-                          accountEmail: Text(snapshot.data!.password!));
-                    }
-                  }
-                  return CircularProgressIndicator();
-                }),
+            UserAccountsDrawerHeader(
+                accountName: Text(userViewModel.CurrentUser.fullName!),
+                accountEmail: Text(userViewModel.CurrentUser.userName!)),
             ListTile(
               leading: Icon(Icons.person),
               title: Text('Personal Detailes'),
@@ -54,7 +31,7 @@ class _HomePageState extends State<HomePage> {
                 pushNavigateTo(
                     context,
                     PersonalDetailes(
-                      index: userViewModel.CurrentUser.id,
+                      user: userViewModel.CurrentUser,
                     ));
               },
             ),
@@ -71,7 +48,7 @@ class _HomePageState extends State<HomePage> {
                   icon: Icon(Icons.logout),
                   onPressed: () {
                     userViewModel.logOut();
-                    removeNavigatTo(context, HomePage());
+                    removeNavigatTo(context, LoginScreen());
                   },
                 ),
               ],

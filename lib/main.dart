@@ -4,7 +4,7 @@ import 'package:students/Views/home_page.dart';
 import 'package:students/Views/login_page.dart';
 import 'package:students/Views/singin_page.dart';
 import 'package:students/ViewModels/users_view_model.dart';
-import 'package:students/sqflite.dart';
+import 'package:students/data/database_init.dart';
 import 'package:students/add_student_screen.dart';
 import 'package:students/student_detailes.dart';
 import 'package:provider/provider.dart';
@@ -61,16 +61,14 @@ class _StudentsState extends State<Students> {
   }
 }
 
-//وقفت عند فحص الرسبونس حق التعديل لليوزر
-
 class Splash extends StatelessWidget {
   Splash({super.key});
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<UsersViewModel>(context);
+    var loginViewModel = Provider.of<LoginViewModel>(context);
 
     return FutureBuilder(
-      future: provider.IsLoging(),
+      future: loginViewModel.IsLoging(context),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasData) {
@@ -88,6 +86,3 @@ class Splash extends StatelessWidget {
     );
   }
 }
-
-
-//وقفت عند تسجيل خاصية البقاء مسجلا

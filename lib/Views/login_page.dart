@@ -17,7 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-
+  bool obsecure = true;
   @override
   void dispose() {
     _usernameController.dispose();
@@ -31,16 +31,23 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('Login'),
-      ),
       body: SingleChildScrollView(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Image.asset('assets/images/login_image.jpg'),
+            SizedBox(
+              height: 50,
+            ),
+            CircleAvatar(
+              radius: 100,
+              backgroundImage: AssetImage('assets/images/login_image.jpg'),
+            ),
+            Text(
+              'log in to see your account',
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
+            ),
             Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(40.0),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -62,9 +69,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextFormField(
                       controller: _passwordController,
                       decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          icon: !obsecure
+                              ? Icon(Icons.lock_open)
+                              : Icon(Icons.lock),
+                          onPressed: () {
+                            setState(() {
+                              obsecure = !obsecure;
+                            });
+                          },
+                        ),
                         labelText: 'Password',
                       ),
-                      obscureText: true,
+                      obscureText: obsecure,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Enter password name';
@@ -73,15 +90,19 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                     ),
                     SizedBox(height: 24.0),
-                    TextButton(
-                        child: Text('Login'),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50))),
+                        child: Text('   Login   '),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             String logInMessage = await loginViewModel.logIn(
                                 _usernameController.text,
-                                _passwordController.text);
+                                _passwordController.text,
+                                context);
                             if (logInMessage == 'Welcome') {
-                              pushNavigateTo(context, HomePage());
+                              removeNavigatTo(context, HomePage());
                             }
 
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -92,13 +113,21 @@ class _LoginScreenState extends State<LoginScreen> {
                                 content: Text('$logInMessage')));
                           }
                         }),
+                    SizedBox(
+                      height: 50,
+                    ),
+                    Text('Do not have an account ?',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w400)),
                     TextButton(
                         onPressed: () {
                           {
                             pushNavigateTo(context, SinginScreen());
                           }
                         },
-                        child: Text('do not have an account? sing in '))
+                        child: Text(' sing in ',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w700)))
                   ],
                 ),
               ),

@@ -5,6 +5,7 @@ import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:students/Models/user.dart';
+import 'package:students/main.dart';
 
 class SqlDb {
   static Database? _db;
@@ -31,42 +32,88 @@ class SqlDb {
   _onCreate(Database db, int version) async {
     await db.execute('''
   
-  CREATE TABLE "users" ( 
+  CREATE TABLE "students" ( 
     "id" INTEGER  NOT NULL PRIMARY KEY  AUTOINCREMENT, 
-    "name" TEXT NOT NULL unique,
-    "password" TEXT NOT NULL
+    "fullName" TEXT NOT NULL,
+    "lastName" TEXT NOT NULL,
+    "country" TEXT NOT NULL,
+    "city" TEXT NOT NULL,
+    "neighborhood" TEXT NOT NULL,
+    "borthDay" TEXT NOT NULL,
+    "gender" INTEGER NOT NULL,
+    "userName" TEXT NOT NULL unique,
+    "password" TEXT NOT NULL 
+
     )
  ''');
   }
 
-  readData(String query) async {
+  get(String userName, String password) async {
     Database? mydb = await db;
-    List<Map> response = await mydb!.rawQuery(query);
+
+    List<Map> response = await mydb!.query('students',
+        columns: [
+          "id",
+          "fullName",
+          "lastName",
+          "country",
+          "city",
+          "neighborhood",
+          "borthDay",
+          "gender",
+          "userName",
+          "password"
+        ],
+        where: "userName=? and password=?",
+        whereArgs: [userName, password]);
     return response;
   }
 
-  query(String query) async {
+  getById(int id) async {
+    Database? mydb = await db;
+
+    List<Map> response = await mydb!.query('students',
+        columns: [
+          "id",
+          "fullName",
+          "lastName",
+          "country",
+          "city",
+          "neighborhood",
+          "borthDay",
+          "gender",
+          "userName",
+          "password"
+        ],
+        where: "id=? ",
+        whereArgs: [id]);
+    return response;
+  }
+
+  create(User user) async {
+    Database? mydb = await db;
+    int response = await mydb!.insert('students', user.toJson());
+    return response;
+  }
+
+  getAll(String query) async {
     Database? mydb = await db;
     List<Map> response = await mydb!.query(query);
     return response;
   }
 
-  insertData(String sql) async {
+  update(int id, User user) async {
     Database? mydb = await db;
-    int response = await mydb!.rawInsert(sql);
+    int response = await mydb!
+        .update("students", user.toJson(), where: "id=?", whereArgs: [id]);
     return response;
   }
 
-  updateData(String sql) async {
+  deleteData(int id) async {
     Database? mydb = await db;
-    int response = await mydb!.rawUpdate(sql);
-    return response;
-  }
+    int response =
+        await mydb!.delete("students", where: "id=?", whereArgs: [id]);
 
-  deleteData(String query) async {
-    Database? mydb = await db;
-    int response = await mydb!.rawDelete(query);
-    //print(response);
     return response;
   }
 }

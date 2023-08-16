@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:students/Views/login_page.dart';
 import 'package:students/main.dart';
-import 'package:students/sqflite.dart';
+import 'package:students/data/database_init.dart';
 
 class AddStudentPage extends StatefulWidget {
   AddStudentPage({super.key});
@@ -119,10 +119,10 @@ class _AddStudentPageState extends State<AddStudentPage> {
                 child: ElevatedButton(
                     onPressed: () {
                       if (formstate.currentState!.validate()) {
-                        sql.insertData('''
-                          INSERT INTO "students" ('name', 'collage','department','level','gender')
-                          VALUES ("${nameCont.text}","${colCont.text}","${depCont.text}","${levCont.text}","${gender}")
-                          ''');
+                        //   sql.insertData('''
+                        //      INSERT INTO "students" ('name', 'collage','department','level','gender')
+                        //      VALUES ("${nameCont.text}","${colCont.text}","${depCont.text}","${levCont.text}","${gender}")
+                        //     ''');
 
                         Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:students/main.dart';
-import 'package:students/sqflite.dart';
+import 'package:students/data/database_init.dart';
 
 import 'Views/login_page.dart';
 
@@ -140,11 +140,6 @@ class _EditStudentPageState extends State<EditStudentPage> {
                 child: ElevatedButton(
                     onPressed: () {
                       if (formstate.currentState!.validate()) {
-                        sql.updateData('''
-                            update 'students' set 'name'="${nameCont.text}", 'collage'="${colCont.text}",'department'="${depCont.text}",'level'="${levCont.text}",'gender'="${gender}" where id=${widget.student['id']} 
-                           
-                            ''');
-
                         Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
                                 builder: (context) => LoginScreen()),

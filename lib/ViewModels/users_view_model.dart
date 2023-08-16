@@ -1,15 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:students/Models/user.dart';
 import 'package:students/Repository/UsersRepository/users_local.dart';
 
 import '../Views/personal_detailes_edit_page.dart';
-import '../Views/personal_detailes_page.dart';
 
 class UsersViewModel with ChangeNotifier {
   List<User> users = [];
   User CurrentUser = User();
+
   Future<List<User>> getusers() async {
     var _users = await UsersLocal().getAll();
     users = _users;
@@ -17,58 +16,9 @@ class UsersViewModel with ChangeNotifier {
     return users;
   }
 
-  late bool _isLoging = false; //'//CurrentUser.userName.isEmpty ? false : true;
-
-  //login() {}
-
   logOut() async {
     SharedPreferences sherPre = await SharedPreferences.getInstance();
     sherPre.clear();
-    _isLoging = !_isLoging;
-  }
-
-  Future<bool> IsLoging() async {
-    SharedPreferences sherPre = await SharedPreferences.getInstance();
-    var isLoging = sherPre.getBool('isLoging') ?? false;
-    _isLoging = isLoging;
-    if (isLoging) {
-      getCurrentUser();
-    }
-    return _isLoging;
-  }
-
-  Future<User> getCurrentUser() async {
-    //return CurrentUser;
-    //UserModel CurrentUser = UserModel();
-
-    SharedPreferences sherPre = await SharedPreferences.getInstance();
-    int id = int.parse(sherPre.getInt('id').toString());
-
-    String userName = sherPre.getString('userName').toString();
-
-    String userPassword = sherPre.getString('password').toString();
-
-    CurrentUser.id = id;
-    CurrentUser.userName = userName;
-    CurrentUser.password = userPassword;
-    //User _user = User();
-    return CurrentUser;
-  }
-
-  Future<bool> SetCurrentUser() async {
-    SharedPreferences sherPre = await SharedPreferences.getInstance();
-
-    int id = int.parse(sherPre.getInt('id').toString());
-    String userName = sherPre.getString('userName').toString();
-    String userPassword = sherPre.getString('password').toString();
-    sherPre.setBool('isLoging', true);
-
-    CurrentUser.id = id;
-    CurrentUser.userName = userName;
-    CurrentUser.password = userPassword;
-    _isLoging = true;
-    notifyListeners();
-    return true;
   }
 
   navigateToUserDetailesEdit(BuildContext context, int id) {
@@ -93,6 +43,7 @@ class UsersViewModel with ChangeNotifier {
   }
 
   Future<String> updateUser(int id, User user) async {
+    // var user2 = users.elementAt(id);
     User use = await UsersLocal().put(id, user);
     notifyListeners();
     return "Done";

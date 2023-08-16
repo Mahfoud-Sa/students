@@ -8,6 +8,7 @@ import 'package:students/Views/add_user_page.dart';
 import 'package:students/Views/personal_detailes_edit_page.dart';
 import 'package:students/Views/personal_detailes_page.dart';
 import 'package:students/Views/singin_page.dart';
+import 'package:students/Views/widgets/student_list_tile.dart';
 import 'package:students/utiles/navigations_utiles.dart';
 
 class UsersPage extends StatefulWidget {
@@ -22,7 +23,7 @@ class _UsersPageState extends State<UsersPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    users = getUsers();
+    //users = getUsers();
   }
 
   Future<List<User>> getUsers() async {
@@ -39,37 +40,11 @@ class _UsersPageState extends State<UsersPage> {
         title: Text('Users'),
         centerTitle: true,
       ),
-      body: FutureBuilder(
-        future: users,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: Icon(Icons.person),
-                    title: Text(snapshot.data![index].userName!),
-                    subtitle: Text(snapshot.data![index].id.toString()!),
-                    trailing: IconButton(
-                      icon: Icon(Icons.arrow_forward),
-                      onPressed: () {
-                        pushNavigateTo(context,
-                            PersonalDetailes(index: snapshot.data![index].id!));
-                      },
-                    ),
-                  );
-                },
-              );
-            } else {
-              return Center(
-                child: Text('No Users'),
-              );
-            }
-          }
-          return CircularProgressIndicator();
-        },
-      ),
+      body: ListView.builder(
+          itemCount: userViewModel.users.length,
+          itemBuilder: (context, index) {
+            return StudentListTile(user: userViewModel.users[index]);
+          }),
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: () {
